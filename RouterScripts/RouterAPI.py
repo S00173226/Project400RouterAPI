@@ -18,9 +18,10 @@ def deviceFunctionCall(deviceName, functionCall):
 
 @app.route('/registerDevice', methods=['POST'])
 def registerDevice():
-
+    clientIP = request.environ['REMOTE_ADDR']
+    print(clientIP)
     received_json=json.loads(request.data)
-    t = threading.Thread(target=rf.addDevice(received_json))
+    t = threading.Thread(target=rf.addDevice(received_json, clientIP))
     t.start()
     return "Registered"
 
@@ -63,4 +64,4 @@ def check_database():
 
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.136')
+    app.run(host='192.168.2.1')

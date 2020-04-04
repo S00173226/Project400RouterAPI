@@ -2,7 +2,9 @@
     "Registered-Devices": {
         "device-type": {
             "lights": {
-                "arrayOfDevices": [],
+                "arrayOfDevices": [
+                    
+                ],
                 "count": 0
             },
             "mediaServer": {

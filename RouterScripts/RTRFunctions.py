@@ -36,8 +36,8 @@ def installer_call(install_link):
         raise ValueError("Error Occured Launching Installer")
     return response
 
-def request_device_functions(received_json):
-    url = "http://" + received_json['ip-address'] + ":5000" + received_json['api-routes']
+def request_device_functions(newDevice):
+    url = "http://" + newDevice.ipAddress + ":5000" + newDevice.apiRoutes
     #url = "http://192.168.1.139" + ":5000" + "/home/api/v1.0/raspberry-pi/api-calls"
     payload = ""
     headers = {'content-type': 'application/json'}
@@ -56,23 +56,25 @@ def read_devices():
             json_file.close()
             return data
 
-def addDevice(received_json):
+def addDevice(received_json, clientIP):
     data = read_devices()
     deviceID = ""
     for key in data['Registered-Devices']['device-type'].keys():
         print(key)
         if received_json['device-type'] == key:
             devices = []
-            newDevice = rc.Device(deviceDesc=received_json['device-desc'], ipAddress=received_json['ip-address'],macAddress=received_json['mac-address'], apiRoutes=received_json['api-routes'], installerURL= received_json['installer-link'])
+            newDevice = rc.Device(deviceDesc=received_json['device-desc'], ipAddress=clientIP,macAddress=received_json['mac-address'], apiRoutes=received_json['api-routes'], installerURL= received_json['installer-link'])
             data['Registered-Devices']['device-type'][key]['arrayOfDevices'].append(newDevice.jsonResponse())
             data['Registered-Devices']['device-type'][key]['count'] += 1
             deviceID = newDevice.id
-        with open('Registered-Devices.json', 'w') as outfile:
-            json.dump(data, outfile, indent=4, sort_keys=True)
+            with open('Registered-Devices.json', 'w') as outfile:
+                json.dump(data, outfile, indent=4, sort_keys=True)
+
+            DeviceAPIs = request_device_functions(newDevice)
+            print(DeviceAPIs)
+            addAPI(DeviceAPIs, deviceID)
     print("Device Added")
-    DeviceAPIs = request_device_functions(received_json)
-    print(DeviceAPIs)
-    addAPI(DeviceAPIs, deviceID)
+    
 
 def addAPI(DeviceAPIs, deviceID):
     data = read_devices()
