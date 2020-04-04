@@ -1,0 +1,18 @@
+{
+    "Registered-Devices": {
+        "device-type": {
+            "lights": {
+                "arrayOfDevices": [],
+                "count": 0
+            },
+            "mediaServer": {
+                "arrayOfDevices": [],
+                "count": 0
+            },
+            "smartTV": {
+                "arrayOfDevices": [],
+                "count": 0
+            }
+        }
+    }
+}
